@@ -1,13 +1,43 @@
+version: "3.8"
+
 services:
   mongo:
-    image: mongodb/mongodb-community-server:latest
+    image: mongodb/mongodb-community-server:7.0.14
     container_name: mongo
     ports:
-      - "27017:27017"
+      - "27017:27017"     # sadece yerel geliştirme için dışa aç
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
+    command: >
+      --wiredTigerCacheSizeGB=1.5
+      --setParameter diagnosticDataCollectionEnabled=false
+      --bind_ip_all
     volumes:
       - mongo-data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "2"        # Mongo tüm CPU’yu yemesin
+          memory: 3g       # OOM olmasın, bellek üst sınırı
+        reservations:
+          cpus: "0.50"
+          memory: 1g
+    ulimits:
+      nofile:
+        soft: 64000
+        hard: 64000
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
 volumes:
   mongo-data:

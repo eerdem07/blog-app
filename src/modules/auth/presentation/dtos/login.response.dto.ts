@@ -1,11 +1,6 @@
 import { Role } from 'src/modules/user/domain/role.vo';
 
-export type LoginDtoInput = {
-  email: string;
-  password: string;
-};
-
-export type LoginDtoOutput = {
+export class LoginResponseDto {
   token: string;
   user: {
     id: string;
@@ -13,4 +8,4 @@ export type LoginDtoOutput = {
     email: string;
     role: Role;
   };
-};
+}

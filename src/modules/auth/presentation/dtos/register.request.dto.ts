@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class RegisterDto {
+export class RegisterRequestDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(8, {
