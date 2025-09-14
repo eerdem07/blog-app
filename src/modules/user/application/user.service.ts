@@ -12,16 +12,16 @@ export class UserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
+  async findOneByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOneByEmail(email);
   }
 
   async create(createUser: CreateUser) {
-    const user = new User(
+    const user = User.create(
       createUser.username,
       createUser.email,
       createUser.password,
-      new Role('USER'),
+      Role.user(),
     );
 
     const newUser = this.userRepository.create(user);

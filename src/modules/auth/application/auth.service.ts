@@ -29,12 +29,13 @@ export class AuthService {
       this.configService.get<string | number>('SALT_ROUNDS')!,
     );
 
-    registerDtoInput.password = await bcrypt.hash(
-      registerDtoInput.password,
-      saltRounds,
-    );
+    const hashed = await bcrypt.hash(registerDtoInput.password, saltRounds);
 
-    const newUser = await this.userService.create(registerDtoInput);
+    const newUser = await this.userService.create({
+      username: registerDtoInput.username,
+      password: hashed,
+      email: registerDtoInput.email,
+    });
     return newUser;
   }
 
