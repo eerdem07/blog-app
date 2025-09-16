@@ -12,10 +12,10 @@ import { Document } from 'mongoose';
   },
 })
 export class UserDocument extends Document {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, maxLength: 30, minLength: 8 })
   username: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, lowercase: true })
   email: string;
 
   @Prop({ required: true })

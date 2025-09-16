@@ -23,11 +23,13 @@ export class AuthService {
       registerDtoInput.email,
     );
 
-    if (isExisting) throw new ConflictException('This email already taken!');
+    if (isExisting) throw new ConflictException('This email is already taken');
 
-    const saltRounds = Number(
-      this.configService.get<string | number>('SALT_ROUNDS')!,
-    );
+    const saltRoundsRaw = this.configService.get('SALT_ROUNDS'); // undefined - null - string - number gelebilir.
+    const saltRounds = Number(saltRoundsRaw);
+    if (!saltRoundsRaw || isNaN(saltRounds) || saltRounds < 10) {
+      throw new Error('SALT_ROUND must be valid');
+    }
 
     const hashed = await bcrypt.hash(registerDtoInput.password, saltRounds);
 
